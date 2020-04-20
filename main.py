@@ -113,7 +113,7 @@ def play_game(res, req):
     user_id = req['session']['user_id']
     attempt = sessionStorage[user_id]['attempt']
     help_button_view(res)
-    if req['response']['original_utterance'].lower() == 'помощь':
+    if req['request']['original_utterance'].lower() == 'помощь':
         res['response']['text'] = 'Игра "Угадай город". Правила: ' \
                                   'Алиса загадывает город и показывает картинку, ' \
                                   'ваша задача - угадать изображенный на фото город.'
