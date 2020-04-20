@@ -103,10 +103,10 @@ def handle_dialog(res, req):
 
 
 def help_button_view(res):
-    res['response']['buttons'] = {
+    res['response']['buttons'] = [{
         'title': 'Помощь',
         'hide': True
-    }
+    }]
 
 
 def play_game(res, req):
