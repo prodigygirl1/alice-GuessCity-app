@@ -110,11 +110,11 @@ def help_button_view(res):
 
 
 def view_city_button(res, city):
-    res['response']['buttons'] = [{
+    res['response']['buttons'].append({
         'title': 'Показать город на карте',
         'url': f'https://yandex.ru/maps/?mode=search&text={city}',
         'hide': True
-    }]
+    })
 
 
 def play_game(res, req):
@@ -125,6 +125,8 @@ def play_game(res, req):
         res['response']['text'] = 'Игра "Угадай город". Правила: ' \
                                   'Алиса загадывает город и показывает картинку, ' \
                                   'ваша задача - угадать изображенный на фото город.'
+        return
+    if req['request']['original_utterance'].lower() == 'показать город на карте':
         return
     else:
         if attempt == 1:
