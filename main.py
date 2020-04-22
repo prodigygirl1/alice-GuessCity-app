@@ -109,6 +109,14 @@ def help_button_view(res):
     }]
 
 
+def view_city_button(res, city):
+    res['response']['buttons'] = [{
+        'title': 'Показать город на карте',
+        'url': f'https://yandex.ru/maps/?mode=search&text={city}',
+        'hide': True
+    }]
+
+
 def play_game(res, req):
     user_id = req['session']['user_id']
     attempt = sessionStorage[user_id]['attempt']
@@ -142,6 +150,7 @@ def play_game(res, req):
                 # отправляем пользователя на второй круг. Обратите внимание на этот шаг на схеме.
                 res['response']['text'] = 'Правильно! Сыграем ещё?'
                 sessionStorage[user_id]['guessed_cities'].append(city)
+                view_city_button(res, city)
                 sessionStorage[user_id]['game_started'] = False
                 return
             else:
