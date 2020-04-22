@@ -31,6 +31,7 @@ def main():
     logging.info('Response: %r', response)
     return json.dumps(response)
 
+
 def viewbuttons(res):
     res['response']['buttons'] = [
         {
@@ -47,6 +48,14 @@ def viewbuttons(res):
         }
     ]
 
+
+def viewbutton_help(res):
+    res['response']['buttons'] = [
+        {
+            'title': 'Помощь',
+            'hide': True
+        }
+    ]
 
 def handle_dialog(res, req):
     user_id = req['session']['user_id']
@@ -97,7 +106,8 @@ def handle_dialog(res, req):
                 if req['request']['original_utterance'].lower() == 'помощь':
                     res['response']['text'] = 'Игра "Угадай город". Правила: ' \
                                         'Алиса загадывает город и показывает картинку, ' \
-                                         'ваша задача - угадать изображенный на фото город.'
+                                        'ваша задача - угадать изображенный на фото город. ' \
+                                        'Отгадаешь город по фото?'
                 else:
                     res['response']['text'] = 'Не поняла ответа! Так да или нет?'
                 viewbuttons(res)
@@ -116,7 +126,7 @@ def view_city_button(res, city):
 def play_game(res, req):
     user_id = req['session']['user_id']
     attempt = sessionStorage[user_id]['attempt']
-
+    viewbutton_help(res)
     if req['request']['original_utterance'].lower() == 'помощь':
         res['response']['text'] = 'Игра "Угадай город". Правила: ' \
                                   'Алиса загадывает город и показывает картинку, ' \
