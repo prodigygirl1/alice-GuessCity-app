@@ -32,30 +32,39 @@ def main():
     return json.dumps(response)
 
 
-def viewbuttons(res):
-    res['response']['buttons'] = [
+def buttons_empty(res):
+    res['response']['buttons'] = []
+
+
+def view_base_buttons(res):
+    res['response']['buttons'].append(
         {
             'title': 'Да',
             'hide': True
-        },
+        })
+    res['response']['buttons'].append(
         {
             'title': 'Нет',
             'hide': True
-        },
+        })
+
+
+def view_help_button(res):
+    res['response']['buttons'].append(
         {
             'title': 'Помощь',
             'hide': True
         }
-    ]
+    )
 
 
-def viewbutton_help(res):
-    res['response']['buttons'] = [
-        {
-            'title': 'Помощь',
-            'hide': True
-        }
-    ]
+def view_city_button(res, city):
+    res['response']['buttons'].append({
+        'title': 'Показать город на карте',
+        'url': f'https://yandex.ru/maps/?mode=search&text={city}',
+        'hide': True
+    })
+
 
 def handle_dialog(res, req):
     user_id = req['session']['user_id']
@@ -78,7 +87,9 @@ def handle_dialog(res, req):
             # как видно из предыдущего навыка, сюда мы попали, потому что пользователь написал своем имя.
             # Предлагаем ему сыграть и два варианта ответа "Да" и "Нет".
             res['response']['text'] = f'Приятно познакомиться, {first_name.title()}. Я Алиса. Отгадаешь город по фото?'
-            viewbuttons(res)
+            buttons_empty(res)
+            view_base_buttons(res)
+            view_help_button(res)
     else:
         # У нас уже есть имя, и теперь мы ожидаем ответ на предложение сыграть.
         # В sessionStorage[user_id]['game_started'] хранится True или False в зависимости от того,
@@ -110,23 +121,21 @@ def handle_dialog(res, req):
                                         'Отгадаешь город по фото?'
                 else:
                     res['response']['text'] = 'Не поняла ответа! Так да или нет?'
-                viewbuttons(res)
+                buttons_empty(res)
+                view_base_buttons(res)
+                view_help_button(res)
         else:
             play_game(res, req)
 
 
-def view_city_button(res, city):
-    res['response']['buttons'].append({
-        'title': 'Показать город на карте',
-        'url': f'https://yandex.ru/maps/?mode=search&text={city}',
-        'hide': True
-    })
+
 
 
 def play_game(res, req):
     user_id = req['session']['user_id']
     attempt = sessionStorage[user_id]['attempt']
-    viewbutton_help(res)
+    buttons_empty(res)
+    view_help_button(res)
     if req['request']['original_utterance'].lower() == 'помощь':
         res['response']['text'] = 'Игра "Угадай город". Правила: ' \
                                   'Алиса загадывает город и показывает картинку, ' \
