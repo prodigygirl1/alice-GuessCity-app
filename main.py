@@ -195,5 +195,6 @@ def get_first_name(req):
 
 
 if __name__ == '__main__':
+    print('TYTA')
     port = int(os.environ.get("PORT", 5000))
     app.run(host='0.0.0.0', port=port)
