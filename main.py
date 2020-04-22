@@ -61,7 +61,12 @@ def handle_dialog(res, req):
                 {
                     'title': 'Нет',
                     'hide': True
+                },
+                {
+                    'title': 'Помощь',
+                    'hide': True
                 }
+
             ]
     else:
         # У нас уже есть имя, и теперь мы ожидаем ответ на предложение сыграть.
@@ -126,7 +131,8 @@ def play_game(res, req):
                                   'Алиса загадывает город и показывает картинку, ' \
                                   'ваша задача - угадать изображенный на фото город.'
         return
-    if req['request']['original_utterance'].lower() == 'показать город на карте':
+    elif req['request']['original_utterance'].lower() == 'показать город на карте':
+        res['response']['text'] = ''
         return
     else:
         if attempt == 1:
@@ -197,6 +203,5 @@ def get_first_name(req):
 
 
 if __name__ == '__main__':
-    print('TYTA')
     port = int(os.environ.get("PORT", 5000))
     app.run(host='0.0.0.0', port=port)
