@@ -31,6 +31,22 @@ def main():
     logging.info('Response: %r', response)
     return json.dumps(response)
 
+def viewbuttons(res):
+    res['response']['buttons'] = [
+        {
+            'title': 'Да',
+            'hide': True
+        },
+        {
+            'title': 'Нет',
+            'hide': True
+        },
+        {
+            'title': 'Помощь',
+            'hide': True
+        }
+    ]
+
 
 def handle_dialog(res, req):
     user_id = req['session']['user_id']
@@ -53,21 +69,7 @@ def handle_dialog(res, req):
             # как видно из предыдущего навыка, сюда мы попали, потому что пользователь написал своем имя.
             # Предлагаем ему сыграть и два варианта ответа "Да" и "Нет".
             res['response']['text'] = f'Приятно познакомиться, {first_name.title()}. Я Алиса. Отгадаешь город по фото?'
-            res['response']['buttons'] = [
-                {
-                    'title': 'Да',
-                    'hide': True
-                },
-                {
-                    'title': 'Нет',
-                    'hide': True
-                },
-                {
-                    'title': 'Помощь',
-                    'hide': True
-                }
-
-            ]
+            viewbuttons(res)
     else:
         # У нас уже есть имя, и теперь мы ожидаем ответ на предложение сыграть.
         # В sessionStorage[user_id]['game_started'] хранится True или False в зависимости от того,
@@ -91,35 +93,16 @@ def handle_dialog(res, req):
             elif 'нет' in req['request']['nlu']['tokens']:
                 res['response']['text'] = 'Ну и ладно!'
                 res['end_session'] = True
-            elif req['request']['original_utterance'].lower() == 'помощь':
-                res['response']['text'] = 'Игра "Угадай город". Правила: ' \
-                                  'Алиса загадывает город и показывает картинку, ' \
-                                  'ваша задача - угадать изображенный на фото город.'
             else:
-                res['response']['text'] = 'Не поняла ответа! Так да или нет?'
-                res['response']['buttons'] = [
-                    {
-                        'title': 'Да',
-                        'hide': True
-                    },
-                    {
-                        'title': 'Нет',
-                        'hide': True
-                    },
-                    {
-                        'title': 'Помощь',
-                        'hide': True
-                    }
-                ]
+                if req['request']['original_utterance'].lower() == 'помощь':
+                    res['response']['text'] = 'Игра "Угадай город". Правила: ' \
+                                        'Алиса загадывает город и показывает картинку, ' \
+                                         'ваша задача - угадать изображенный на фото город.'
+                else:
+                    res['response']['text'] = 'Не поняла ответа! Так да или нет?'
+                viewbuttons(res)
         else:
             play_game(res, req)
-
-
-def help_button_view(res):
-    res['response']['buttons'] = [{
-        'title': 'Помощь',
-        'hide': True
-    }]
 
 
 def view_city_button(res, city):
@@ -133,7 +116,7 @@ def view_city_button(res, city):
 def play_game(res, req):
     user_id = req['session']['user_id']
     attempt = sessionStorage[user_id]['attempt']
-    help_button_view(res)
+
     if req['request']['original_utterance'].lower() == 'помощь':
         res['response']['text'] = 'Игра "Угадай город". Правила: ' \
                                   'Алиса загадывает город и показывает картинку, ' \
