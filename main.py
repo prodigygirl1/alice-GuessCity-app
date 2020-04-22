@@ -103,10 +103,10 @@ def handle_dialog(res, req):
 
 
 def help_button_view(res):
-    res['response']['buttons'].append({
+    res['response']['buttons'] = [{
         'title': 'Помощь',
         'hide': True
-    })
+    }]
 
 
 def view_city_button(res, city):
