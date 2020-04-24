@@ -222,9 +222,7 @@ def get_first_name(req):
 
 
 def get_country(city):
-
     url = "https://geocode-maps.yandex.ru/1.x/"
-
     params = {
         'geocode': city,
         'format': 'json'
