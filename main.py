@@ -229,9 +229,10 @@ def get_country(city):
     }
 
     response = requests.get(url, params)
+    print(city, response)
     json = response.json()
-
     return json['response']['GeoObjectCollection']['featureMember'][0]['GeoObject']['metaDataProperty']['GeocoderMetaData']['AddressDetails']['Country']['CountryName']
+
 
 
 city_is_guessed = ''
